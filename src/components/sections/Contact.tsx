@@ -17,15 +17,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import emailjs from "@emailjs/browser";
 
 const contactSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
+  fullName: z.string().min(1, "Name is required"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   company: z.string().optional(),
   currency: z.string().default("USD"),
   budget: z.string().optional(),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  message: z.string().min(1, "Message is required"),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
@@ -99,9 +100,22 @@ export default function Contact() {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     setIsSubmitting(false);
-    const isSuccess = Math.random() > 0.1; // 90% success rate for mock
-
-    if (isSuccess) {
+    // const isSuccess = Math.random() > 0.1; // 90% success rate for mock
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_CONTACT_US_TEMPLATE_ID,
+        {
+          name: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          currency: data.currency,
+          company: data.company,
+          budget: data.budget,
+          message: data.message,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
       reset();
       toast({
         title: "Message Sent Successfully!",
@@ -109,7 +123,8 @@ export default function Contact() {
         className: "bg-white border-none shadow-[0_20px_50px_rgba(20,49,9,0.15)] p-6 rounded-2xl flex items-start gap-4",
         variant: "default",
       });
-    } else {
+    } catch (error) {
+      console.error("EmailJS Error:", error);
       toast({
         title: "Submission Failed",
         description: "Something went wrong. Please try again later.",
@@ -117,6 +132,22 @@ export default function Contact() {
         variant: "destructive",
       });
     }
+    // if (isSuccess) {
+    //   reset();
+    //   toast({
+    //     title: "Message Sent Successfully!",
+    //     description: "We'll get back to you within 24 hours.",
+    //     className: "bg-white border-none shadow-[0_20px_50px_rgba(20,49,9,0.15)] p-6 rounded-2xl flex items-start gap-4",
+    //     variant: "default",
+    //   });
+    // } else {
+    //   toast({
+    //     title: "Submission Failed",
+    //     description: "Something went wrong. Please try again later.",
+    //     className: "bg-white border-none shadow-[0_20px_50px_rgba(220,38,38,0.15)] p-6 rounded-2xl flex items-start gap-4",
+    //     variant: "destructive",
+    //   });
+    // }
   };
 
   return (

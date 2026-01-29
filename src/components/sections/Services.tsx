@@ -19,11 +19,12 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
 const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Valid contact number is required"),
-  requirement: z.string().min(10, "Please provide more details about your requirement"),
+  requirement: z.string().min(1, "Requirement is required"),
 });
+import emailjs from "@emailjs/browser";
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -115,17 +116,44 @@ export default function Services() {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     console.log("Service Request:", { ...data, service: selectedService });
     setIsModalOpen(false);
     form.reset();
     setPhoneValue("");
-    toast({
-      title: "Request Submitted Successfully",
-      description: "We'll get back to you shortly.",
-      variant: "default",
-      className: "bg-white border-none shadow-[0_20px_50px_rgba(20,49,9,0.15)] p-6 rounded-2xl flex items-start gap-4"
-    });
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_SERVICE_REQUEST_TEMPLATE_ID,
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          requirement: data.requirement
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+      toast({
+        title: "Request Submitted Successfully",
+        description: "We'll get back to you shortly.",
+        variant: "default",
+        className: "bg-white border-none shadow-[0_20px_50px_rgba(20,49,9,0.15)] p-6 rounded-2xl flex items-start gap-4"
+      });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast({
+        title: "Submission Failed",
+        description: "Something went wrong. Please try again later.",
+        className: "bg-white border-none shadow-[0_20px_50px_rgba(220,38,38,0.15)] p-6 rounded-2xl flex items-start gap-4",
+        variant: "destructive",
+      });
+    }
+    // toast({
+    //   title: "Request Submitted Successfully",
+    //   description: "We'll get back to you shortly.",
+    //   variant: "default",
+    //   className: "bg-white border-none shadow-[0_20px_50px_rgba(20,49,9,0.15)] p-6 rounded-2xl flex items-start gap-4"
+    // });
   };
 
   useEffect(() => {
