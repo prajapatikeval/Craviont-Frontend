@@ -266,14 +266,15 @@ export default function Services() {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-4xl bg-white rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] z-[105]"
             >
-              <div className="bg-[#143109]/90 backdrop-blur-md p-10 md:w-1/3 flex flex-col justify-between text-white relative overflow-hidden mb-8 md:mb-0">
+              {/* <div className="bg-[#143109] backdrop-blur-md p-10 md:w-1/3 flex flex-col justify-between text-white relative overflow-hidden mb-8 md:mb-0"> */}
+              <div className="bg-[#143109] backdrop-blur-md p-10 md:w-1/3 flex flex-col justify-between text-white relative overflow-hidden md:mb-0">
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-dotted-grid mix-blend-overlay"></div>
                 <div className="relative z-10">
                   <h3 className="text-3xl font-bold mb-3 text-white">Request Service</h3>
                   <p className="text-white/70 text-base mb-8">Let's build something amazing together.</p>
-                  <div className="inline-block px-4 py-2 bg-white/10 rounded-lg text-sm font-medium border border-white/20">
+                  {/* <div className="inline-block px-4 py-2 bg-white/10 rounded-lg text-sm font-medium border border-white/20">
                     {selectedService}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="hidden md:block relative z-10">
                   <div className="flex items-center gap-4 mb-4 group cursor-default">
@@ -292,7 +293,7 @@ export default function Services() {
                 </button>
               </div>
 
-              <div className="p-10 md:w-2/3 overflow-y-auto bg-white relative">
+              <div className="p-8 md:w-2/3 overflow-y-auto bg-white relative">
                 <button 
                   onClick={() => setIsModalOpen(false)}
                   className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors hidden md:block cursor-pointer z-[110] hover:bg-gray-100 p-2 rounded-full"
@@ -300,7 +301,7 @@ export default function Services() {
                   <X size={24} />
                 </button>
 
-                <div className="mt-12">
+                <div>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                       <FormField
