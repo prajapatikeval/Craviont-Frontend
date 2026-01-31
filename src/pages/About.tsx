@@ -28,7 +28,7 @@ export default function AboutPage() {
         <link rel="canonical" href="https://craviont.com/about" />
       </Helmet>
 
-      <h1>About Craviont</h1>
+      <h1 className="sr-only">About Craviont</h1>
       <main className="min-h-screen w-full bg-white text-[#212121] font-sans selection:bg-[#143109]/20 selection:text-[#143109] overflow-x-hidden">
         <Navbar />
         
